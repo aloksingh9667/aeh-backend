@@ -12,6 +12,7 @@ export type UpdateApplicationStatusBodyStatus =
 export const UpdateApplicationStatusBodyStatus = {
   pending: "pending",
   reviewing: "reviewing",
+  reviewed: "reviewed",
   accepted: "accepted",
   rejected: "rejected",
 } as const;
