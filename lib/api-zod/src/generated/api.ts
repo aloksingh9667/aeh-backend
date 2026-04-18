@@ -56,7 +56,7 @@ export const listApplicationsQueryLimitDefault = 50;
 export const listApplicationsQueryOffsetDefault = 0;
 
 export const ListApplicationsQueryParams = zod.object({
-  status: zod.enum(["pending", "reviewing", "accepted", "rejected"]).optional(),
+  status: zod.enum(["pending", "reviewing", "reviewed", "accepted", "rejected"]).optional(),
   course: zod.coerce.string().optional(),
   limit: zod.coerce.number().default(listApplicationsQueryLimitDefault),
   offset: zod.coerce.number().default(listApplicationsQueryOffsetDefault),
@@ -72,7 +72,7 @@ export const ListApplicationsResponse = zod.object({
       course: zod.string(),
       classType: zod.enum(["regular", "weekend"]),
       message: zod.string().nullish(),
-      status: zod.enum(["pending", "reviewing", "accepted", "rejected"]),
+      status: zod.enum(["pending", "reviewing", "reviewed", "accepted", "rejected"]),
       createdAt: zod.coerce.date(),
       updatedAt: zod.coerce.date(),
     }),
@@ -107,7 +107,7 @@ export const GetApplicationResponse = zod.object({
   course: zod.string(),
   classType: zod.enum(["regular", "weekend"]),
   message: zod.string().nullish(),
-  status: zod.enum(["pending", "reviewing", "accepted", "rejected"]),
+  status: zod.enum(["pending", "reviewing", "reviewed", "accepted", "rejected"]),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
@@ -120,7 +120,7 @@ export const UpdateApplicationStatusParams = zod.object({
 });
 
 export const UpdateApplicationStatusBody = zod.object({
-  status: zod.enum(["pending", "reviewing", "accepted", "rejected"]),
+  status: zod.enum(["pending", "reviewing", "reviewed", "accepted", "rejected"]),
   notes: zod.string().optional(),
 });
 
@@ -132,7 +132,7 @@ export const UpdateApplicationStatusResponse = zod.object({
   course: zod.string(),
   classType: zod.enum(["regular", "weekend"]),
   message: zod.string().nullish(),
-  status: zod.enum(["pending", "reviewing", "accepted", "rejected"]),
+  status: zod.enum(["pending", "reviewing", "reviewed", "accepted", "rejected"]),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
