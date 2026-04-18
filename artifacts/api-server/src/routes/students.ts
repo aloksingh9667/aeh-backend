@@ -13,7 +13,7 @@ const UpdateStudentBody = z.object({
   course: z.string().optional(),
   courseCode: z.string().optional(),
   semester: z.string().optional(),
-  status: z.enum(["pending", "active", "inactive", "graduated", "suspended"]).optional(),
+  status: z.enum(["active", "inactive", "graduated", "suspended"]).optional(),
   address: z.string().optional(),
   guardianName: z.string().optional(),
   guardianPhone: z.string().optional(),
@@ -51,7 +51,7 @@ router.get("/", requireAuth, async (req, res) => {
         .orderBy(desc(studentsTable.createdAt)).limit(limit).offset(offset);
     } else if (status) {
       data = await db.select().from(studentsTable)
-        .where(eq(studentsTable.status, status as "pending" | "active" | "inactive" | "graduated" | "suspended"))
+        .where(eq(studentsTable.status, status as "active" | "inactive" | "graduated" | "suspended"))
         .orderBy(desc(studentsTable.createdAt)).limit(limit).offset(offset);
     } else {
       data = await db.select().from(studentsTable)
