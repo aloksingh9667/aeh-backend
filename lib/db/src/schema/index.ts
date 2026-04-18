@@ -6,3 +6,4 @@ export * from "./students";
 export * from "./courses";
 export * from "./fee_structures";
 export * from "./fee_payments";
+export * from "./events";
