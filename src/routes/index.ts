@@ -10,6 +10,7 @@ import coursesRouter from "./courses.js";
 import feeStructuresRouter from "./feeStructures.js";
 import paymentsRouter from "./payments.js";
 import studentsRouter from "./students.js";
+import eventsRouter from "./events.js";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use("/courses", coursesRouter);
 router.use("/fee-structures", feeStructuresRouter);
 router.use("/payments", paymentsRouter);
 router.use("/students", studentsRouter);
+router.use("/events", eventsRouter);
 
 export default router;
