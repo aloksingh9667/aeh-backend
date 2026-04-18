@@ -1,6 +1,6 @@
 import { pgTable, serial, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
 
-export const studentStatusEnum = pgEnum("student_status", ["pending", "active", "inactive", "graduated", "suspended"]);
+export const studentStatusEnum = pgEnum("student_status", ["active", "inactive", "graduated", "suspended"]);
 
 export const studentsTable = pgTable("students", {
   id: serial("id").primaryKey(),
@@ -13,7 +13,7 @@ export const studentsTable = pgTable("students", {
   courseCode: text("course_code").notNull(),
   enrollmentYear: text("enrollment_year").notNull(),
   semester: text("semester").default("1"),
-  status: studentStatusEnum("status").default("pending").notNull(),
+  status: studentStatusEnum("status").default("active").notNull(),
   address: text("address"),
   guardianName: text("guardian_name"),
   guardianPhone: text("guardian_phone"),
