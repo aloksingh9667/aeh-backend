@@ -12,6 +12,10 @@ const FeeStructureBody = z.object({
   paymentPlan: z.enum(["quarterly", "semester", "yearly", "full_course"]),
   amount: z.number().int().min(1),
   description: z.string().optional(),
+  dueDay: z.number().int().min(1).max(28).optional(),
+  fineAmount: z.number().int().min(0).optional(),
+  fineType: z.enum(["fixed", "per_day"]).optional(),
+  academicYear: z.string().optional(),
   isActive: z.string().optional(),
 });
 
