@@ -5,6 +5,7 @@ import { z } from "zod/v4";
 export const applicationStatusEnum = pgEnum("application_status", [
   "pending",
   "reviewing",
+  "reviewed",
   "accepted",
   "rejected",
 ]);
