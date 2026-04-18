@@ -19,6 +19,10 @@ export const feePaymentsTable = pgTable("fee_payments", {
   status: paymentStatusEnum("status").default("pending").notNull(),
   description: text("description"),
   paidAt: timestamp("paid_at"),
+  periodLabel: text("period_label"),
+  dueDate: timestamp("due_date"),
+  fineAmount: integer("fine_amount").default(0),
+  isLate: text("is_late").default("false"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
