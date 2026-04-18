@@ -12,6 +12,7 @@ export type ListApplicationsStatus =
 export const ListApplicationsStatus = {
   pending: "pending",
   reviewing: "reviewing",
+  reviewed: "reviewed",
   accepted: "accepted",
   rejected: "rejected",
 } as const;
