@@ -1,5 +1,4 @@
 import { defineConfig } from "drizzle-kit";
-import path from "path";
 
 const url = process.env.NEON_DATABASE_URL || process.env.DATABASE_URL;
 
@@ -8,7 +7,8 @@ if (!url) {
 }
 
 export default defineConfig({
-  schema: path.join(import.meta.dirname, "./src/db/schema/index.ts"),
+  schema: "./src/db/schema/index.ts",
   dialect: "postgresql",
   dbCredentials: { url },
 });
+
