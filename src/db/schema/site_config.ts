@@ -27,6 +27,7 @@ export const siteConfigTable = pgTable("site_config", {
   city: text("city"),
   state: text("state"),
   pincode: text("pincode"),
+  officeHours: text("office_hours"),
   mapEmbedUrl: text("map_embed_url"),
 
   principalName: text("principal_name"),
@@ -96,10 +97,12 @@ export const siteConfigTable = pgTable("site_config", {
     showSchools?: boolean;
     showAchievements?: boolean;
     showApplyCta?: boolean;
+    showFacilities?: boolean;
+    sectionTemplates?: Record<string, string>;
   }>().default({}),
 
   navbar: jsonb("navbar").$type<{
-    items?: Array<{ label: string; href: string; visible?: boolean }>;
+    items?: Array<{ label: string; href: string; visible?: boolean; children?: Array<{ label: string; href: string; sub?: string }> }>;
     showStudentLogin?: boolean;
     showApplyButton?: boolean;
     applyButtonText?: string;
@@ -110,6 +113,15 @@ export const siteConfigTable = pgTable("site_config", {
     email?: string;
     badge?: string;
     deadline?: string;
+  }>().default({}),
+
+  footer: jsonb("footer").$type<{
+    template?: string;
+    aboutText?: string;
+    columns?: Array<{ heading: string; links: Array<{ label: string; href: string }> }>;
+    bottomText?: string;
+    showSocial?: boolean;
+    showApplyButton?: boolean;
   }>().default({}),
 
   testimonialsLayout: text("testimonials_layout").default("featured"),
