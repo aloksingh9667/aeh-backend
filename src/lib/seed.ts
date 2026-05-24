@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { db, adminsTable, applicationsTable, contactsTable, careersTable, coursesTable, feeStructuresTable } from "@workspace/db";
+import { db, adminsTable, applicationsTable, contactsTable, careersTable, coursesTable, feeStructuresTable } from "../db/index.js";
 import { eq, count } from "drizzle-orm";
 import { logger } from "./logger.js";
 
@@ -19,7 +19,7 @@ export async function seedDatabase() {
     if (Number(existingApps[0]?.cnt ?? 0) === 0) {
       await db.insert(applicationsTable).values([
         { name: "Rahul Sharma", email: "rahul@example.com", phone: "9876543210", course: "BBA", classType: "regular", status: "pending", message: "Interested in management studies" },
-        { name: "Priya Gupta", email: "priya@example.com", phone: "9812345678", course: "BCA", classType: "regular", status: "reviewing", message: "Looking forward to IT career" },
+        { name: "Priya Gupta", email: "priya@example.com", phone: "9812345678", course: "BCA", classType: "regular", status: "reviewed", message: "Looking forward to IT career" },
         { name: "Amit Kumar", email: "amit@example.com", phone: "9765432101", course: "MBA", classType: "weekend", status: "accepted" },
         { name: "Sunita Singh", email: "sunita@example.com", phone: "9823456789", course: "B.Com", classType: "regular", status: "pending" },
         { name: "Deepak Patel", email: "deepak@example.com", phone: "9898989898", course: "BJMC", classType: "regular", status: "rejected" },
@@ -67,33 +67,43 @@ export async function seedDatabase() {
     const existingFees = await db.select({ cnt: count() }).from(feeStructuresTable);
     if (Number(existingFees[0]?.cnt ?? 0) === 0) {
       await db.insert(feeStructuresTable).values([
+        { courseCode: "BBA", courseName: "Bachelor of Business Administration", paymentPlan: "quarterly", amount: 12500 },
         { courseCode: "BBA", courseName: "Bachelor of Business Administration", paymentPlan: "semester", amount: 25000 },
         { courseCode: "BBA", courseName: "Bachelor of Business Administration", paymentPlan: "yearly", amount: 48000 },
         { courseCode: "BBA", courseName: "Bachelor of Business Administration", paymentPlan: "full_course", amount: 135000 },
+        { courseCode: "MBA", courseName: "Master of Business Administration", paymentPlan: "quarterly", amount: 17500 },
         { courseCode: "MBA", courseName: "Master of Business Administration", paymentPlan: "semester", amount: 35000 },
         { courseCode: "MBA", courseName: "Master of Business Administration", paymentPlan: "yearly", amount: 65000 },
         { courseCode: "MBA", courseName: "Master of Business Administration", paymentPlan: "full_course", amount: 125000 },
+        { courseCode: "BCA", courseName: "Bachelor of Computer Applications", paymentPlan: "quarterly", amount: 11000 },
         { courseCode: "BCA", courseName: "Bachelor of Computer Applications", paymentPlan: "semester", amount: 22000 },
         { courseCode: "BCA", courseName: "Bachelor of Computer Applications", paymentPlan: "yearly", amount: 42000 },
         { courseCode: "BCA", courseName: "Bachelor of Computer Applications", paymentPlan: "full_course", amount: 120000 },
+        { courseCode: "MCA", courseName: "Master of Computer Applications", paymentPlan: "quarterly", amount: 15000 },
         { courseCode: "MCA", courseName: "Master of Computer Applications", paymentPlan: "semester", amount: 30000 },
         { courseCode: "MCA", courseName: "Master of Computer Applications", paymentPlan: "yearly", amount: 56000 },
         { courseCode: "MCA", courseName: "Master of Computer Applications", paymentPlan: "full_course", amount: 108000 },
+        { courseCode: "BCOM", courseName: "Bachelor of Commerce", paymentPlan: "quarterly", amount: 9000 },
         { courseCode: "BCOM", courseName: "Bachelor of Commerce", paymentPlan: "semester", amount: 18000 },
         { courseCode: "BCOM", courseName: "Bachelor of Commerce", paymentPlan: "yearly", amount: 34000 },
         { courseCode: "BCOM", courseName: "Bachelor of Commerce", paymentPlan: "full_course", amount: 96000 },
+        { courseCode: "BJMC", courseName: "Bachelor of Journalism & Mass Communication", paymentPlan: "quarterly", amount: 11000 },
         { courseCode: "BJMC", courseName: "Bachelor of Journalism & Mass Communication", paymentPlan: "semester", amount: 22000 },
         { courseCode: "BJMC", courseName: "Bachelor of Journalism & Mass Communication", paymentPlan: "yearly", amount: 42000 },
         { courseCode: "BJMC", courseName: "Bachelor of Journalism & Mass Communication", paymentPlan: "full_course", amount: 120000 },
+        { courseCode: "BPHARM", courseName: "Bachelor of Pharmacy", paymentPlan: "quarterly", amount: 20000 },
         { courseCode: "BPHARM", courseName: "Bachelor of Pharmacy", paymentPlan: "semester", amount: 40000 },
         { courseCode: "BPHARM", courseName: "Bachelor of Pharmacy", paymentPlan: "yearly", amount: 75000 },
         { courseCode: "BPHARM", courseName: "Bachelor of Pharmacy", paymentPlan: "full_course", amount: 288000 },
+        { courseCode: "BALLB", courseName: "BA LLB", paymentPlan: "quarterly", amount: 14000 },
         { courseCode: "BALLB", courseName: "BA LLB", paymentPlan: "semester", amount: 28000 },
         { courseCode: "BALLB", courseName: "BA LLB", paymentPlan: "yearly", amount: 52000 },
         { courseCode: "BALLB", courseName: "BA LLB", paymentPlan: "full_course", amount: 250000 },
+        { courseCode: "BED", courseName: "Bachelor of Education", paymentPlan: "quarterly", amount: 12500 },
         { courseCode: "BED", courseName: "Bachelor of Education", paymentPlan: "semester", amount: 25000 },
         { courseCode: "BED", courseName: "Bachelor of Education", paymentPlan: "yearly", amount: 47000 },
         { courseCode: "BED", courseName: "Bachelor of Education", paymentPlan: "full_course", amount: 90000 },
+        { courseCode: "BA", courseName: "Bachelor of Arts", paymentPlan: "quarterly", amount: 7500 },
         { courseCode: "BA", courseName: "Bachelor of Arts", paymentPlan: "semester", amount: 15000 },
         { courseCode: "BA", courseName: "Bachelor of Arts", paymentPlan: "yearly", amount: 28000 },
         { courseCode: "BA", courseName: "Bachelor of Arts", paymentPlan: "full_course", amount: 80000 },

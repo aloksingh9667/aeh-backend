@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, feeStructuresTable } from "@workspace/db";
+import { db, feeStructuresTable } from "../db/index.js";
 import { eq, and } from "drizzle-orm";
 import { requireAuth } from "../lib/auth.js";
 import { z } from "zod";
@@ -17,6 +17,9 @@ const FeeStructureBody = z.object({
   fineType: z.enum(["fixed", "per_day"]).optional(),
   academicYear: z.string().optional(),
   isActive: z.string().optional(),
+  feeCategory: z.enum(["tuition", "registration", "exam", "other"]).optional(),
+  totalCourseAmount: z.number().int().min(0).optional(),
+  durationYears: z.number().int().min(1).max(10).optional(),
 });
 
 router.get("/", async (req, res) => {

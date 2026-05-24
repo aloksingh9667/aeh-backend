@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, applicationsTable, contactsTable, careersTable } from "@workspace/db";
+import { db, applicationsTable, contactsTable, careersTable, studentsTable } from "../db/index.js";
 import { eq, desc, count, sql } from "drizzle-orm";
 import { requireAuth } from "../lib/auth.js";
 
@@ -7,12 +7,14 @@ const router = Router();
 
 router.get("/dashboard", requireAuth, async (req, res) => {
   try {
-    const [[{ total: totalApps }], [{ pending: pendingApps }], [{ total: totalContacts }], [{ newContacts }], [{ total: totalCareers }]] = await Promise.all([
+    const [[{ total: totalApps }], [{ pending: pendingApps }], [{ total: totalContacts }], [{ newContacts }], [{ total: totalCareers }], [{ total: totalStudents }], [{ pendingStudents }]] = await Promise.all([
       db.select({ total: count() }).from(applicationsTable),
       db.select({ pending: count() }).from(applicationsTable).where(eq(applicationsTable.status, "pending")),
       db.select({ total: count() }).from(contactsTable),
       db.select({ newContacts: count() }).from(contactsTable).where(eq(contactsTable.status, "new")),
       db.select({ total: count() }).from(careersTable),
+      db.select({ total: count() }).from(studentsTable),
+      db.select({ pendingStudents: count() }).from(studentsTable).where(eq(studentsTable.status, "pending")),
     ]);
 
     const appsByStatus = await db
@@ -37,6 +39,8 @@ router.get("/dashboard", requireAuth, async (req, res) => {
       totalContacts: Number(totalContacts),
       newContacts: Number(newContacts),
       totalCareers: Number(totalCareers),
+      totalStudents: Number(totalStudents),
+      pendingStudents: Number(pendingStudents),
       applicationsByStatus,
       applicationsByCourse: appsByCourse.map(r => ({ course: r.course, count: Number(r.cnt) })),
     });

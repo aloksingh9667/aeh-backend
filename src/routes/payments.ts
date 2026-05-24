@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import { db, feePaymentsTable, feeStructuresTable, studentsTable } from "@workspace/db";
+import { db, feePaymentsTable, feeStructuresTable, studentsTable } from "../db/index.js";
 import { eq, desc } from "drizzle-orm";
 import { requireStudentAuth } from "../lib/studentAuth.js";
 import { requireAuth } from "../lib/auth.js";

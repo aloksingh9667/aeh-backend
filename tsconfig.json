@@ -1,10 +1,21 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
-  "files": [],
-  "references": [
-    { "path": "./lib/db" },
-    { "path": "./lib/api-zod" },
-    { "path": "./artifacts/api-server" }
-  ]
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": ["es2022"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"],
+    "isolatedModules": true,
+    "noEmitOnError": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
 }

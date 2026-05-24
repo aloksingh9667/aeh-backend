@@ -1,8 +1,8 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
-import { db, adminsTable } from "@workspace/db";
+import { db, adminsTable } from "../db/index.js";
 import { eq } from "drizzle-orm";
-import { AdminLoginBody } from "@workspace/api-zod";
+import { AdminLoginBody } from "../api-zod/index.js";
 import { signToken, requireAuth } from "../lib/auth.js";
 import type { Request } from "express";
 import type { JwtPayload } from "../lib/auth.js";

@@ -1,17 +1,47 @@
 {
-  "name": "workspace",
-  "version": "0.0.0",
-  "license": "MIT",
-  "packageManager": "pnpm@10.26.1",
-  "scripts": {
-    "preinstall": "rm -f package-lock.json yarn.lock",
-    "build": "pnpm -r --if-present run build",
-    "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
-  },
+  "name": "aeh-api-server",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development node ./build.mjs && node --enable-source-maps ./dist/index.mjs",
+    "build": "node ./build.mjs",
+    "start": "node --enable-source-maps ./dist/index.mjs",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2",
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.0",
+    "express": "^5",
+    "jsonwebtoken": "^9.0.3",
+    "p-retry": "^8.0.0",
+    "pg": "^8.13.3",
+    "pino": "^9",
+    "pino-http": "^10",
+    "razorpay": "^2.9.6",
+    "zod": "^3.24.3"
+  },
   "devDependencies": {
-    "typescript": "~5.9.2",
-    "prettier": "^3.8.1"
+    "@types/bcryptjs": "^3.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^22.15.21",
+    "@types/pg": "^8.11.13",
+    "drizzle-kit": "^0.31.1",
+    "esbuild": "^0.27.3",
+    "esbuild-plugin-pino": "^2.3.3",
+    "pino-pretty": "^13",
+    "thread-stream": "3.1.0",
+    "typescript": "~5.9.2"
   }
 }

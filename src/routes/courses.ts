@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, coursesTable } from "@workspace/db";
+import { db, coursesTable } from "../db/index.js";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "../lib/auth.js";
 import { z } from "zod";

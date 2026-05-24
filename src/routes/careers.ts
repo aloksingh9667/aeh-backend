@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { db, careersTable } from "@workspace/db";
+import { db, careersTable } from "../db/index.js";
 import { eq, desc, count } from "drizzle-orm";
 import {
   CreateCareerBody,
   UpdateCareerStatusBody,
   ListCareersQueryParams,
-} from "@workspace/api-zod";
+} from "../api-zod/index.js";
 import { requireAuth } from "../lib/auth.js";
 
 const router = Router();

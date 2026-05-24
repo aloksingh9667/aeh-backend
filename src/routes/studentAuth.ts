@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
-import { db, studentsTable } from "@workspace/db";
+import { db, studentsTable } from "../db/index.js";
 import { eq } from "drizzle-orm";
 import { signStudentToken, requireStudentAuth } from "../lib/studentAuth.js";
 import type { Request } from "express";
@@ -49,7 +49,7 @@ router.post("/register", async (req, res) => {
       return;
     }
     const passwordHash = await bcrypt.hash(password, 10);
-    const [student] = await db.insert(studentsTable).values({
+    await db.insert(studentsTable).values({
       name,
       email,
       phone,
@@ -58,11 +58,11 @@ router.post("/register", async (req, res) => {
       course,
       courseCode,
       enrollmentYear,
+      status: "pending",
     }).returning();
-    const token = signStudentToken({ studentId: student.id, email: student.email, rollNumber: student.rollNumber });
     res.status(201).json({
-      token,
-      student: { id: student.id, name: student.name, email: student.email, rollNumber: student.rollNumber, course: student.course },
+      success: true,
+      message: "Registration submitted successfully. Your account is pending admin approval. You will be able to login once an administrator approves your request.",
     });
   } catch (err) {
     req.log.error({ err }, "Student register error");
@@ -83,8 +83,12 @@ router.post("/login", async (req, res) => {
       res.status(401).json({ error: "Invalid email or password" });
       return;
     }
+    if (student.status === "pending") {
+      res.status(403).json({ error: "Your account is awaiting admin approval. You will be notified once approved. For urgent queries, contact the admissions office." });
+      return;
+    }
     if (student.status === "inactive" || student.status === "suspended") {
-      res.status(403).json({ error: "Account is not active. Please contact administration." });
+      res.status(403).json({ error: "Your account is not active. Please contact administration." });
       return;
     }
     const valid = await bcrypt.compare(password, student.passwordHash);
