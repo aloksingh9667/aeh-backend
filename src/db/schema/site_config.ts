@@ -125,6 +125,7 @@ export const siteConfigTable = pgTable("site_config", {
   }>().default({}),
 
   testimonialsLayout: text("testimonials_layout").default("featured"),
+  razorpayMode: text("razorpay_mode").default("test"),
 
   scheduledData: jsonb("scheduled_data").$type<Record<string, unknown>>(),
   scheduledAt: timestamp("scheduled_at"),
