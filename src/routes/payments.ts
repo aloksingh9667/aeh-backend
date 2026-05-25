@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import { db, feePaymentsTable, feeStructuresTable, studentsTable } from "../db/index.js";
+import { db, feePaymentsTable, feeStructuresTable, studentsTable, siteConfigTable } from "../db/index.js";
 import { eq, desc } from "drizzle-orm";
 import { requireStudentAuth } from "../lib/studentAuth.js";
 import { requireAuth } from "../lib/auth.js";
@@ -11,13 +11,29 @@ import { z } from "zod";
 
 const router = Router();
 
-function getRazorpay() {
-  const key_id = process.env.RAZORPAY_KEY_ID;
-  const key_secret = process.env.RAZORPAY_KEY_SECRET;
-  if (!key_id || !key_secret || key_id.includes("PLACEHOLDER")) {
-    throw new Error("Razorpay credentials not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.");
+async function getRazorpayMode(): Promise<"test" | "live"> {
+  try {
+    const rows = await db.select({ razorpayMode: siteConfigTable.razorpayMode }).from(siteConfigTable).limit(1);
+    return (rows[0]?.razorpayMode === "live") ? "live" : "test";
+  } catch {
+    return "test";
   }
-  return new Razorpay({ key_id, key_secret });
+}
+
+function getRazorpay(mode: "test" | "live") {
+  const isLive = mode === "live";
+  const key_id = isLive
+    ? process.env.RAZORPAY_KEY_ID
+    : (process.env.RAZORPAY_TEST_KEY_ID || process.env.RAZORPAY_KEY_ID);
+  const key_secret = isLive
+    ? process.env.RAZORPAY_KEY_SECRET
+    : (process.env.RAZORPAY_TEST_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET);
+
+  if (!key_id || !key_secret || key_id.includes("PLACEHOLDER")) {
+    const varName = isLive ? "RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET" : "RAZORPAY_TEST_KEY_ID / RAZORPAY_TEST_KEY_SECRET";
+    throw new Error(`Razorpay ${mode} credentials not configured. Please set ${varName} in your environment.`);
+  }
+  return { instance: new Razorpay({ key_id, key_secret }), key_id };
 }
 
 function generateReceiptNumber(): string {
@@ -48,7 +64,9 @@ router.post("/create-order", requireStudentAuth, async (req, res) => {
     return;
   }
   try {
-    const razorpay = getRazorpay();
+    const mode = await getRazorpayMode();
+    const { instance: razorpay, key_id } = getRazorpay(mode);
+
     const [feeStructure] = await db.select().from(feeStructuresTable).where(eq(feeStructuresTable.id, parsed.data.feeStructureId)).limit(1);
     if (!feeStructure) {
       res.status(404).json({ error: "Fee structure not found" });
@@ -88,7 +106,8 @@ router.post("/create-order", requireStudentAuth, async (req, res) => {
       orderId: order.id,
       amount: feeStructure.amount * 100,
       currency: "INR",
-      keyId: process.env.RAZORPAY_KEY_ID,
+      keyId: key_id,
+      mode,
       paymentId: payment.id,
       receiptNumber,
       studentName: studentRecord.name,
@@ -108,7 +127,13 @@ router.post("/verify", requireStudentAuth, async (req, res) => {
   }
   const { razorpayOrderId, razorpayPaymentId, razorpaySignature, paymentId } = parsed.data;
   try {
-    const key_secret = process.env.RAZORPAY_KEY_SECRET!;
+    const mode = await getRazorpayMode();
+    const { key_id: _key_id } = getRazorpay(mode);
+    void _key_id;
+    const key_secret = mode === "live"
+      ? process.env.RAZORPAY_KEY_SECRET!
+      : (process.env.RAZORPAY_TEST_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET)!;
+
     const hmac = crypto.createHmac("sha256", key_secret);
     hmac.update(`${razorpayOrderId}|${razorpayPaymentId}`);
     const generated = hmac.digest("hex");
